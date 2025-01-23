@@ -8,12 +8,27 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { AddDispatch } from "../store/store";
+import { addHabit } from "../store/habit-slice";
 const AddHabitForm: React.FC = () => {
   const [name, SetName] = useState<string>("");
-  const [frequency, setFrequency] = useState<"daily" | " weekly">("daily");
+  const [frequency, setFrequency] = useState<"daily" | "weekly">("daily");
 
-  const handeSubmit = (e: React.FormEvent) => e.preventDefault();
+  const dispatch = useDispatch<AddDispatch>();
+
+  const handeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name.trim()) {
+      dispatch(
+        addHabit({
+          name,
+          frequency,
+        })
+      );
+      SetName("");
+    }
+  };
 
   return (
     <form onSubmit={handeSubmit}>
@@ -43,7 +58,9 @@ const AddHabitForm: React.FC = () => {
             <MenuItem value="weekly">weekly</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary">Add Habit</Button>
+        <Button type="submit" variant="contained" color="primary">
+          Add Habit
+        </Button>
       </Box>
     </form>
   );
