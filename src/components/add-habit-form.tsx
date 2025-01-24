@@ -1,61 +1,49 @@
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
-  Box,
+  TextField,
   Button,
   FormControl,
   InputLabel,
-  MenuItem,
   Select,
-  TextField,
+  MenuItem,
+  Box,
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { AddDispatch } from "../store/store";
 import { addHabit } from "../store/habit-slice";
+import { AppDispatch } from "../store/store";
+
 const AddHabitForm: React.FC = () => {
-  const [name, SetName] = useState<string>("");
+  const [name, setName] = useState("");
   const [frequency, setFrequency] = useState<"daily" | "weekly">("daily");
+  const dispatch = useDispatch<AppDispatch>();
 
-  const dispatch = useDispatch<AddDispatch>();
-
-  const handeSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      dispatch(
-        addHabit({
-          name,
-          frequency,
-        })
-      );
-      SetName("");
+      dispatch(addHabit({ name, frequency }));
+      setName("");
     }
   };
 
   return (
-    <form onSubmit={handeSubmit}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-        }}
-      >
+    <form onSubmit={handleSubmit}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
-          label="habits Name"
+          label="Habit Name"
           value={name}
-          onChange={(e) => SetName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Enter habit name"
           fullWidth
         />
         <FormControl fullWidth>
-          <InputLabel>Frequenvy</InputLabel>
+          <InputLabel>Frequency</InputLabel>
           <Select
             value={frequency}
-            onChange={(e) =>
-              setFrequency(e.target.value as "daily" | " weekly")
-            }
+            label="Frequency"
+            onChange={(e) => setFrequency(e.target.value as "daily" | "weekly")}
           >
             <MenuItem value="daily">Daily</MenuItem>
-            <MenuItem value="weekly">weekly</MenuItem>
+            <MenuItem value="weekly">Weekly</MenuItem>
           </Select>
         </FormControl>
         <Button type="submit" variant="contained" color="primary">
